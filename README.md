@@ -1,10 +1,6 @@
 # Post-Quantum-Handshake
-Repository for the development of an implementation of the NIST Post-Quantum standard NIPS203 document turned into a handshake between two devices. Specific algorithm used is ML-KEM-512
 
-
-# Project Name
-
-> A brief description of what your project does goes here.
+> Repository for the development of an implementation of the NIST Post-Quantum standard NIPS203 document turned into a handshake between two devices. Specific algorithm used is ML-KEM-512
 
 ---
 

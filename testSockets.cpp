@@ -1,3 +1,6 @@
+//File specifically used for checking if you downloaded and built the libraries correctly, if this compiles and shows version numbers,
+// you are good.
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>

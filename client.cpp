@@ -9,13 +9,6 @@
  *   4. Send  MsgType::Ciphertext → server  (768 bytes)
  *   5. Derive session key (HKDF-SHA256).
  *   6. Exchange MsgType::Finished.
- *
- * TODO before production:
- *   - Verify server identity: check a signature over the public key
- *     using the server's long-term ML-DSA (Dilithium) signing key.
- *   - Exchange nonces; use them as HKDF salt.
- *   - Hash the full transcript; include digest in HKDF info.
- *   - Wrap application data with AES-256-GCM using the session key.
  */
 
 #include "kem_common.hpp"

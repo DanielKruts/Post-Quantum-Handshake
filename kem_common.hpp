@@ -44,9 +44,9 @@ inline constexpr int              BACKLOG      { 5 };
 inline constexpr std::string_view HKDF_INFO    { "ml-kem-512-handshake-v1" };
 
 // ML-KEM-512 sizes (bytes) — verified at runtime against liboqs metadata
-inline constexpr std::size_t KEM_PUBLIC_KEY_LEN  { 800  };
-inline constexpr std::size_t KEM_SECRET_KEY_LEN  { 1632 };
-inline constexpr std::size_t KEM_CIPHERTEXT_LEN  { 768  };
+inline constexpr std::size_t KEM_PUBLIC_KEY_LEN  { 1568 };
+inline constexpr std::size_t KEM_SECRET_KEY_LEN  { 3168 };
+inline constexpr std::size_t KEM_CIPHERTEXT_LEN  { 1568 };
 inline constexpr std::size_t KEM_SHARED_SEC_LEN  { 32   };
 inline constexpr std::size_t SESSION_KEY_LEN     { 32   };
 

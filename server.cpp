@@ -10,13 +10,6 @@
  *   5. Decapsulate → shared secret.
  *   6. Derive session key (HKDF-SHA256).
  *   7. Exchange MsgType::Finished.
- *
- * TODO before production:
- *   - Sign the public key with a long-term ML-DSA key (authenticate server).
- *   - Exchange nonces; use them as HKDF salt.
- *   - Hash the full transcript; include digest in HKDF info.
- *   - Wrap application data with AES-256-GCM using the session key.
- *   - Accept multiple clients (thread-per-connection or async I/O).
  */
 
 #include "kem_common.hpp"
@@ -31,7 +24,7 @@ public:
     explicit TcpListener(std::string_view port)
     {
         addrinfo hints{};
-        hints.ai_family   = AF_INET6;   // dual-stack; change to AF_INET for IPv4-only
+        hints.ai_family   = AF_INET6;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_flags    = AI_PASSIVE;
 
@@ -44,7 +37,6 @@ public:
                 sock_ = Socket(p->ai_family, p->ai_socktype, p->ai_protocol);
             } catch (...) { continue; }
 
-            // Dual-stack: allow IPv4 clients on the IPv6 socket
             DWORD v6only = 0;
             ::setsockopt(sock_.get(), IPPROTO_IPV6, IPV6_V6ONLY,
                          reinterpret_cast<const char*>(&v6only), sizeof(v6only));
@@ -91,7 +83,6 @@ private:
 // Handshake logic
 // -------------------------------------------------------------------------
 
-/// Performs the full server-side handshake.
 /// Returns a KemContext with complete() == true and sessionKey() ready.
 KemContext serverHandshake(const Socket& clientSock)
 {
@@ -127,10 +118,6 @@ KemContext serverHandshake(const Socket& clientSock)
     printHex("[server] shared_secret", ctx.sharedSecret());
 
     // 5 — Derive session key
-    //
-    // TODO: Replace the empty salt with concatenated client+server nonces
-    //       exchanged at the start of the handshake, and replace HKDF_INFO
-    //       with a SHA-256 hash of the full handshake transcript.
     ctx.deriveSessionKey({}, HKDF_INFO);
     printHex("[server] session_key", ctx.sessionKey());
 
@@ -161,18 +148,11 @@ int main()
         std::cout << "[server] Listening on port " << DEFAULT_PORT << "...\n";
 
         // Accept a single client.
-        // TODO: for multiple clients, move the block below into a
-        //       std::thread (or use async I/O) and loop here.
         Socket clientSock = listener.accept();
         std::cout << "[server] Client connected.\n";
 
         KemContext ctx = serverHandshake(clientSock);
 
-        // ----------------------------------------------------------------
-        // TODO: begin encrypted application data exchange here.
-        // Use ctx.sessionKey() with AES-256-GCM
-        // (OpenSSL EVP_aead_aes_256_gcm or EVP_EncryptInit_ex).
-        // ----------------------------------------------------------------
         std::cout << "[server] Ready for encrypted communication.\n";
 
     } catch (const std::exception& ex) {

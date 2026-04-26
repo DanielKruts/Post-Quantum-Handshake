@@ -2,7 +2,7 @@
  * kem_utils.cpp
  * Implementations for KemContext and framing helpers.
  *
- * Requires C++17.  Link with: oqs  libcrypto  ws2_32
+ * 
  */
 
 #include "kem_common.hpp"
@@ -21,7 +21,7 @@
 
 KemContext::KemContext()
 {
-    kem_ = OQS_KEM_new(OQS_KEM_alg_ml_kem_512);
+    kem_ = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);
     if (!kem_)
         throw OqsError("OQS_KEM_new failed — is ML-KEM-512 enabled in your liboqs build?");
 
@@ -159,7 +159,7 @@ void recvAll(const Socket& sock, uint8_t* buf, int len)
     }
 }
 
-} // anonymous namespace
+}
 
 // =========================================================================
 // Public framing API
